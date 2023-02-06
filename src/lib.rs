@@ -63,22 +63,22 @@ pub async fn unshorten(url: &str, timeout: Option<Duration>, proxy: Option<Proxy
             match service {
                 // Adfly Resolver
                 "adf.ly" | "atominik.com" | "fumacrom.com" | "intamema.com" | "j.gs" | "q.gs" => {
-                    resolvers::adfly::unshort(&validated_url, timeout).await
+                    resolvers::adfly::unshort(&validated_url, timeout, proxy).await
                 }
 
                 // Redirect Resolvers
                 "gns.io" | "ity.im" | "ldn.im" | "nowlinks.net" | "rlu.ru" | "tinyurl.com"
                 | "tr.im" | "u.to" | "vzturl.com" => {
-                    resolvers::redirect::unshort(&validated_url, timeout).await
+                    resolvers::redirect::unshort(&validated_url, timeout, proxy).await
                 }
 
                 // Meta Refresh Resolvers
-                "cutt.us" | "soo.gd" => resolvers::refresh::unshort(&validated_url, timeout).await,
+                "cutt.us" | "soo.gd" => resolvers::refresh::unshort(&validated_url, timeout, proxy).await,
 
                 // Specific Resolvers
-                "adfoc.us" => resolvers::adfocus::unshort(&validated_url, timeout).await,
-                "shorturl.at" => resolvers::shorturl::unshort(&validated_url, timeout).await,
-                "surl.li" => resolvers::surlli::unshort(&validated_url, timeout).await,
+                "adfoc.us" => resolvers::adfocus::unshort(&validated_url, timeout, proxy).await,
+                "shorturl.at" => resolvers::shorturl::unshort(&validated_url, timeout, proxy).await,
+                "surl.li" => resolvers::surlli::unshort(&validated_url, timeout, proxy).await,
 
                 // Generic Resolvers
                 _ => resolvers::generic::unshort(&validated_url, timeout, proxy).await,

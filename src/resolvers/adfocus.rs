@@ -4,12 +4,13 @@ use std::time::Duration;
 use super::from_url_not_200;
 
 use futures::future::{ready, TryFutureExt};
+use reqwest::Proxy;
 
 use crate::{Error, Result};
 
 /// URL Expander for ADFOC.US
-pub(crate) async fn unshort(url: &str, timeout: Option<Duration>) -> Result<String> {
-    from_url_not_200(url, timeout)
+pub(crate) async fn unshort(url: &str, timeout: Option<Duration>, proxy: Option<Proxy>) -> Result<String> {
+    from_url_not_200(url, timeout, proxy)
         .and_then(|html| {
             ready(
                 html.split("click_url = \"")

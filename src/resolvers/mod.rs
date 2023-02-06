@@ -43,8 +43,8 @@ pub(crate) fn custom_redirect_policy() -> Policy {
 }
 
 /// Get Page Content if status!=200
-pub(crate) async fn from_url_not_200(url: &str, timeout: Option<Duration>) -> Result<String> {
-    ready(get_client_builder(timeout).build())
+pub(crate) async fn from_url_not_200(url: &str, timeout: Option<Duration>, proxy: Option<Proxy>) -> Result<String> {
+    ready(get_client_builder(timeout, proxy).build())
         .and_then(|client| async move {
             client
                 .get(url)
@@ -69,8 +69,8 @@ pub(crate) async fn from_url_not_200(url: &str, timeout: Option<Duration>) -> Re
 }
 
 /// get page content irrespective of status code
-pub(crate) async fn from_url(url: &str, timeout: Option<Duration>) -> Result<String> {
-    ready(get_client_builder(timeout).build())
+pub(crate) async fn from_url(url: &str, timeout: Option<Duration>, proxy: Option<Proxy>) -> Result<String> {
+    ready(get_client_builder(timeout, proxy).build())
         .and_then(|client| async move {
             client
                 .get(url)
