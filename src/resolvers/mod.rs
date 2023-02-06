@@ -1,6 +1,6 @@
 use core::time::Duration;
 use regex::Regex;
-use reqwest::{redirect::Policy, Client, ClientBuilder, StatusCode};
+use reqwest::{redirect::Policy, Client, ClientBuilder, StatusCode, Proxy};
 
 pub(crate) mod adfly;
 pub(crate) mod adfocus;
@@ -17,11 +17,15 @@ use crate::Result;
 static UA: &str = "curl/7.72.0";
 
 /// get the reqwest ClientBuilder
-pub(crate) fn get_client_builder(timeout: Option<Duration>) -> ClientBuilder {
-    match timeout {
-        Some(x) => Client::builder().timeout(x),
-        None => Client::builder(),
+pub(crate) fn get_client_builder(timeout: Option<Duration>, proxy: Option<Proxy>) -> ClientBuilder {
+    let mut client = Client::builder();
+    if let Some(x) = timeout{
+        client = client.timeout(x);
     }
+    if let Some(x) = proxy {
+        client = client.proxy(x);
+    }
+    client
     .user_agent(UA)
     .danger_accept_invalid_certs(true)
 }

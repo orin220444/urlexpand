@@ -1,4 +1,5 @@
 use std::time::Duration;
+use reqwest::Proxy;
 use url::{ParseError, Url};
 
 mod error;
@@ -43,7 +44,7 @@ pub fn unshorten_blocking(url: &str, timeout: Option<Duration>) -> Result<String
     rt.block_on(unshorten(url, timeout))
 }
 
-pub async fn unshorten(url: &str, timeout: Option<Duration>) -> Result<String> {
+pub async fn unshorten(url: &str, timeout: Option<Duration>, proxy: Option<Proxy>) -> Result<String> {
     //! UnShorten a shortened URL
     //! ## Example
     //! ```ignore
@@ -80,7 +81,7 @@ pub async fn unshorten(url: &str, timeout: Option<Duration>) -> Result<String> {
                 "surl.li" => resolvers::surlli::unshort(&validated_url, timeout).await,
 
                 // Generic Resolvers
-                _ => resolvers::generic::unshort(&validated_url, timeout).await,
+                _ => resolvers::generic::unshort(&validated_url, timeout, proxy).await,
             }
         })
         .await
