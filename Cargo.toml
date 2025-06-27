@@ -1,6 +1,6 @@
 [package]
 name = "urlexpand"
-version = "0.2.3"
+version = "0.2.4"
 description = "Expand / Unshorten an exhaustive list of Shortened URL's"
 authors = ["Marirs <marirs@gmail.com>"]
 keywords = ["expand", "unshorten", "url", "link"]
@@ -29,7 +29,7 @@ tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
 all-features = true
 
 [features]
-default = ["native-tls"]
+default = ["rustls-tls"]
 blocking = ["tokio"]
 rustls-tls = ["reqwest/rustls-tls"]
 native-tls = ["reqwest/native-tls"]

@@ -1,5 +1,5 @@
-use std::time::Duration;
 use reqwest::Proxy;
+use std::time::Duration;
 use url::{ParseError, Url};
 
 mod error;
@@ -29,7 +29,11 @@ pub fn is_shortened(url: &str) -> bool {
 }
 
 #[cfg(feature = "blocking")]
-pub fn unshorten_blocking(url: &str, timeout: Option<Duration>) -> Result<String> {
+pub fn unshorten_blocking(
+    url: &str,
+    timeout: Option<Duration>,
+    proxy: Option<Proxy>,
+) -> Result<String> {
     //! UnShorten a shortened URL
     //! ## Example
     //! ```ignore
@@ -41,10 +45,14 @@ pub fn unshorten_blocking(url: &str, timeout: Option<Duration>) -> Result<String
     //!  assert!(unshorten_blocking(url, None).await.is_some());    // without timeout
     //! ```
     let rt = tokio::runtime::Runtime::new()?;
-    rt.block_on(unshorten(url, timeout))
+    rt.block_on(unshorten(url, timeout, proxy))
 }
 
-pub async fn unshorten(url: &str, timeout: Option<Duration>, proxy: Option<Proxy>) -> Result<String> {
+pub async fn unshorten(
+    url: &str,
+    timeout: Option<Duration>,
+    proxy: Option<Proxy>,
+) -> Result<String> {
     //! UnShorten a shortened URL
     //! ## Example
     //! ```ignore
@@ -73,7 +81,9 @@ pub async fn unshorten(url: &str, timeout: Option<Duration>, proxy: Option<Proxy
                 }
 
                 // Meta Refresh Resolvers
-                "cutt.us" | "soo.gd" => resolvers::refresh::unshort(&validated_url, timeout, proxy).await,
+                "cutt.us" | "soo.gd" => {
+                    resolvers::refresh::unshort(&validated_url, timeout, proxy).await
+                }
 
                 // Specific Resolvers
                 "adfoc.us" => resolvers::adfocus::unshort(&validated_url, timeout, proxy).await,
